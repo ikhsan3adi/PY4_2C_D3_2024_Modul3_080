@@ -48,3 +48,5 @@ app.*.map.json
 .fvm/
 
 .agent
+
+*_Modul*_080.txt

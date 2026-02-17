@@ -1,23 +1,25 @@
-# Logbook App - Modul 2
+# Logbook App - Modul 3
 
-Aplikasi pencatatan aktivitas harian dengan fitur Autentikasi dan Onboarding, dikembangkan menggunakan Flutter dengan penerapan Clean Architecture.
+Aplikasi Logbook Digital dengan fitur CRUD (Create, Read, Update, Delete) dan penyimpanan data permanen, dikembangkan menggunakan Flutter dengan penerapan prinsip SOLID (SRP, LSP, DIP).
 
 ## Fitur Utama
 
-- **Onboarding**: Antarmuka pengenalan aplikasi dengan 3 langkah visual indikator halaman.
-- **Authentication**: Sistem login dengan multi-user (`admin`, `satriadi`, `user`), validasi input, toggle show/hide password, dan mekanisme lockout (kunci sementara) setelah gagal login 3 kali.
-- **Logbook**: Pencatatan counter dan riwayat aktivitas yang persisten (tersimpan meski aplikasi ditutup) menggunakan `Shared Preferences`.
-- **User-Specific Persistence**: Data setiap pengguna disimpan secara terisolasi, sehingga `admin` dan `user` memiliki catatan masing-masing.
-- **UX Enhancements**: Banner selamat datang yang menyesuaikan waktu (Pagi/Siang/Sore/Malam) dan dialog konfirmasi logout yang aman.
+- **Onboarding**: Antarmuka pengenalan aplikasi dengan 3 langkah dan visual indikator halaman.
+- **Authentication**: Sistem login multi-user dengan validasi input, toggle password visibility, dan mekanisme lockout setelah 3x gagal login.
+- **Logbook CRUD**: Pencatatan aktivitas dengan fitur Tambah, Edit, dan Hapus menggunakan `ListView.builder` untuk rendering dinamis yang efisien.
+- **Reactive Programming**: Manajemen state menggunakan `ValueNotifier` dan `ValueListenableBuilder` sehingga UI terupdate otomatis tanpa `setState()` manual.
+- **JSON Persistence**: Seluruh data catatan disimpan secara permanen ke `Shared Preferences` dalam format JSON menggunakan serialisasi `toMap()`/`fromMap()`.
+- **Search**: Pencarian catatan secara real-time berdasarkan judul.
+- **Kategori**: Sistem kategori (Pribadi, Pekerjaan, Urgent) dengan warna kartu yang berbeda untuk setiap kategori.
+- **Empty State**: Tampilan ilustratif ketika daftar catatan masih kosong.
+- **Swipe to Delete**: Penghapusan catatan dengan gesture swipe ke kiri.
 
 ## Screenshots
 
-|                      Onboarding                       |                    Login                    |                Counter & Banner                 |                 Logout Dialog                 |
-| :---------------------------------------------------: | :-----------------------------------------: | :---------------------------------------------: | :-------------------------------------------: |
-| ![Onboarding](.screenshots/screenshot_onboarding.jpg) | ![Login](.screenshots/screenshot_login.jpg) | ![Counter](.screenshots/screenshot_counter.jpg) | ![Logout](.screenshots/screenshot_logout.jpg) |
+> coming soon
 
 ## Lesson Learned (Refleksi Akhir)
 
-1. **Konsep Baru**: Memahami mendalam tentang `Shared Preferences` untuk persistensi data lokal dan pentingnya `Key` yang unik (misal: `counter_$username`) untuk memisahkan data antar pengguna yang berbeda dalam satu perangkat.
-2. **Kemenangan Kecil**: Berhasil mengimplementasikan logika keamanan "Lockout" pada `LoginController` yang menggunakan `Timer` untuk menonaktifkan tombol login selama 10 detik, memberikan pengalaman keamanan yang nyata. Juga berhasil membuat tampilan lebih personal dengan "Welcome Banner" berbasis waktu.
-3. **Target Berikutnya**: Saya ingin mempelajari bagaimana mengelola state yang lebih kompleks menggunakan state management solution seperti Provider atau Bloc, dan menyimpan data yang lebih terstruktur menggunakan database lokal seperti SQLite atau Hive.
+1. **Konsep Baru**: Memahami perbedaan mendasar antara pemrograman imperatif (`setState`) dan reaktif (`ValueNotifier` + `ValueListenableBuilder`). Dengan pendekatan reaktif, UI hanya merender ulang bagian yang berubah, bukan seluruh halaman, sehingga jauh lebih efisien.
+2. **Kemenangan Kecil**: Berhasil mengimplementasikan serialisasi JSON (`jsonEncode`/`jsonDecode`) untuk menyimpan dan memuat kembali `List<LogModel>` dari `Shared Preferences`. Data catatan tetap utuh meskipun aplikasi di-restart.
+3. **Target Berikutnya**: Ingin mengeksplorasi state management yang lebih advanced seperti Provider atau Bloc, serta menambahkan fitur sorting dan filter berdasarkan kategori atau tanggal untuk meningkatkan kegunaan aplikasi.
