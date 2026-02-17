@@ -59,7 +59,6 @@ class _LogViewState extends State<LogView> {
                 _titleController.text,
                 _contentController.text,
               );
-              setState(() {});
 
               _titleController.clear();
               _contentController.clear();
@@ -109,7 +108,6 @@ class _LogViewState extends State<LogView> {
                 _titleController.text,
                 _contentController.text,
               );
-              setState(() {});
 
               _titleController.clear();
               _contentController.clear();
@@ -165,39 +163,43 @@ class _LogViewState extends State<LogView> {
           ),
         ],
       ),
-      body: _controller.logs.isEmpty
-          ? const Center(child: Text('Belum ada catatan.'))
-          : ListView.builder(
-              itemCount: _controller.logs.length,
-              itemBuilder: (context, index) {
-                final log = _controller.logs[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 4,
+      body: ValueListenableBuilder<List<LogModel>>(
+        valueListenable: _controller.logsNotifier,
+        builder: (context, currentLogs, child) {
+          if (currentLogs.isEmpty) {
+            return const Center(child: Text('Belum ada catatan.'));
+          }
+          return ListView.builder(
+            itemCount: currentLogs.length,
+            itemBuilder: (context, index) {
+              final log = currentLogs[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.note),
+                  title: Text(log.title),
+                  subtitle: Text(log.description),
+                  trailing: Wrap(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () => _showEditLogDialog(index, log),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _controller.removeLog(index),
+                      ),
+                    ],
                   ),
-                  child: ListTile(
-                    leading: const Icon(Icons.note),
-                    title: Text(log.title),
-                    subtitle: Text(log.description),
-                    trailing: Wrap(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.blue),
-                          onPressed: () => _showEditLogDialog(index, log),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            setState(() => _controller.removeLog(index));
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                ),
+              );
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddLogDialog,
         child: const Icon(Icons.add),

@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:logbook_app_080/features/logbook/models/log_model.dart';
 
 class LogController {
-  final List<LogModel> _logs = [];
-  List<LogModel> get logs => _logs;
+  final ValueNotifier<List<LogModel>> logsNotifier = ValueNotifier([]);
 
   void addLog(String title, String desc) {
     final newLog = LogModel(
@@ -10,18 +10,22 @@ class LogController {
       description: desc,
       date: DateTime.now().toString(),
     );
-    _logs.add(newLog);
+    logsNotifier.value = [...logsNotifier.value, newLog];
   }
 
   void updateLog(int index, String title, String desc) {
-    _logs[index] = LogModel(
+    final currentLogs = List<LogModel>.from(logsNotifier.value);
+    currentLogs[index] = LogModel(
       title: title,
       description: desc,
       date: DateTime.now().toString(),
     );
+    logsNotifier.value = currentLogs;
   }
 
   void removeLog(int index) {
-    _logs.removeAt(index);
+    final currentLogs = List<LogModel>.from(logsNotifier.value);
+    currentLogs.removeAt(index);
+    logsNotifier.value = currentLogs;
   }
 }
