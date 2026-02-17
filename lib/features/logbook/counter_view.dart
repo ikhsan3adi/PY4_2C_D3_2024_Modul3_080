@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logbook_app_080/features/logbook/counter_controller.dart';
+import 'package:logbook_app_080/features/onboarding/onboarding_view.dart';
 
 class CounterView extends StatefulWidget {
   final String username;
@@ -13,12 +14,19 @@ class _CounterViewState extends State<CounterView> {
   final CounterController _controller = CounterController();
 
   @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await _controller.load();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-
-    // Initial check for loading data (Task 3 requirement effectively, but we'll do controller logic later)
-    // We can just call load here or in initState
-    // _controller.loadLastValue();
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +48,7 @@ class _CounterViewState extends State<CounterView> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Close dialog
+                        Navigator.pop(context);
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -68,14 +76,17 @@ class _CounterViewState extends State<CounterView> {
             mainAxisSize: MainAxisSize.max,
             spacing: 16,
             children: [
-              Text('Selamat Datang, ${widget.username}!'), // Added welcome text
+              Text('Selamat Datang, ${widget.username}!'),
               Text('Total Hitungan'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 16,
                 children: [
                   IconButton.filled(
-                    onPressed: () => setState(() => _controller.decrement()),
+                    onPressed: () async {
+                      await _controller.decrement();
+                      setState(() {});
+                    },
                     icon: Icon(Icons.remove),
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.redAccent,
@@ -86,7 +97,10 @@ class _CounterViewState extends State<CounterView> {
                     style: TextStyle(fontSize: 40),
                   ),
                   IconButton.filled(
-                    onPressed: () => setState(() => _controller.increment()),
+                    onPressed: () async {
+                      await _controller.increment();
+                      setState(() {});
+                    },
                     icon: Icon(Icons.add),
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.greenAccent,
@@ -98,7 +112,8 @@ class _CounterViewState extends State<CounterView> {
                 icon: Icon(Icons.rotate_left),
                 onPressed: () async {
                   if (await _showResetDialog(context) ?? false) {
-                    setState(() => _controller.reset());
+                    await _controller.reset();
+                    setState(() {});
                   }
                 },
                 label: Text('Reset'),
@@ -107,9 +122,10 @@ class _CounterViewState extends State<CounterView> {
               Text('Step / Langkah: ${_controller.step}'),
               Slider(
                 value: _controller.step.toDouble(),
-                onChanged: (value) => setState(() {
-                  _controller.setStep(value.toInt());
-                }),
+                onChanged: (value) async {
+                  await _controller.setStep(value.toInt());
+                  setState(() {});
+                },
                 min: 1,
                 max: 10,
                 divisions: 9,

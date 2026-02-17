@@ -10,12 +10,10 @@ class LoginController {
     'user': 'user',
   };
 
-  // Lockout state
   int _failedAttempts = 0;
   final ValueNotifier<bool> isLocked = ValueNotifier(false);
   Timer? _lockoutTimer;
 
-  // Login function
   bool login(String username, String password) {
     if (isLocked.value) return false;
 
